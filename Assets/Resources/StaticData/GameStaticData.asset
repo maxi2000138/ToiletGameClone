@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GameStaticData
   m_EditorClassIdentifier: 
   ReachedLevel: 1
-  AmountLevels: 5
+  AmountLevels: 3

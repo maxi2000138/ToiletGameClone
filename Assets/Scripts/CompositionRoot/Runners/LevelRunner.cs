@@ -1,11 +1,15 @@
 using UnityEngine;
+using Zenject;
 
 public class LevelRunner : MonoBehaviour
 {
     private PlayerMove[] _playerMoves;
     private EndPoint[] _endPoints;
+    private SceneLevelChanger _levelChanger;
     private int _drawedLineNum = 0;
     private int _reachedPlayerNum = 0;
+    private bool isCompleted = false;
+    
 
     [SerializeField] 
     private GameObject _loosePanel;
@@ -14,6 +18,12 @@ public class LevelRunner : MonoBehaviour
     private GameObject _winPanel;
     
 
+    [Inject]
+    public void Construct(SceneLevelChanger levelChanger)
+    {
+        _levelChanger = levelChanger;
+    }
+    
     private void Awake()
     {
         ResetDrawedNum();
@@ -97,5 +107,10 @@ public class LevelRunner : MonoBehaviour
     public void OnGameWin()
     {
         _winPanel.SetActive(true);
+        if (!isCompleted)
+        {
+            _levelChanger.UpgradeLevel();
+            isCompleted = true;
+        }
     }
 }

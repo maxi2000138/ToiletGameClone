@@ -24,5 +24,5 @@ public class NextLevelButton : MonoBehaviour
         _nextLevelButton.onClick.RemoveListener(OnNextLevelButtonClick);
     
     public void OnNextLevelButtonClick() => 
-        _sceneLevelChanger.ChangeLevelAndLoad();
+        _sceneLevelChanger.LoadCurrentLevel();
 }

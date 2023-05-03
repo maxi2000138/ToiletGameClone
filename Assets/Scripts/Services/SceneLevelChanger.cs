@@ -11,11 +11,8 @@ public class SceneLevelChanger
         _gameData = gameData;
     }
 
-    public void ChangeLevelAndLoad()
-    {
+    public void UpgradeLevel() => 
         _gameData.SetNewLevel();
-        LoadLevel();
-    }
 
     public void LoadCurrentLevel()
     {
