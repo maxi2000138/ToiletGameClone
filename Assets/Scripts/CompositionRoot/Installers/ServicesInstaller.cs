@@ -12,5 +12,6 @@ public class ServicesInstaller : MonoInstaller
         Container.Bind<SceneLoader>().AsSingle();
         Container.Bind<GameData>().AsSingle();
         Container.Bind<SceneLevelChanger>().AsSingle();
+        Container.Bind<StaticDataService>().AsSingle();
     }
 }

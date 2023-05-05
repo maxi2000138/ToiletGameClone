@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class BackButton : MonoBehaviour
+public class BackToMenuButton : MonoBehaviour
 {
     private Button _backButton;
     private SceneLoader _sceneLoader;

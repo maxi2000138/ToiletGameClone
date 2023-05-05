@@ -17,6 +17,9 @@ public class Draw : MonoBehaviour
     [SerializeField]
     private LineRenderer _lineRendererPrefab;
 
+    [SerializeField]
+    private GameObject _learningStuff;
+
     [SerializeField] 
     private float _minDistance = 0.1f;
 
@@ -25,18 +28,6 @@ public class Draw : MonoBehaviour
     public void Construct(PlayerInput playerInput)
     {
         _playerInput = playerInput;
-        
-        
-       // _playerInput.Player.TouchPress.started += (ctx) => Debug.Log("started press");
-        //_playerInput.Player.TouchPress.performed += (ctx) => Debug.Log("performed press");
-       // _playerInput.Player.TouchPress.canceled += (ctx) => Debug.Log("canceled press");
-        
-        //_playerInput.Player.TouchPosition.started += (ctx) => Debug.Log("started position");
-        //_playerInput.Player.TouchPosition.performed += (ctx) => Debug.Log("performed position");
-       // _playerInput.Player.TouchPosition.canceled += (ctx) => Debug.Log("canceled position");
-        
-
-       
     }
 
     private void OnEnable()
@@ -61,17 +52,28 @@ public class Draw : MonoBehaviour
         var raycast = RaycastTouchPoint();
 
         if (raycast)
+        {
+            if (raycast.collider.gameObject.TryGetComponent(out OnLearnPanelClick setActiveObjectOnClick))
+            {
+                setActiveObjectOnClick.DisablePanelAndEnableDrawing();
+                return;
+            }
+            
             if (raycast.collider.gameObject.TryGetComponent(out PlayerMove playerMove))
             {
                 if(playerMove.ExistLine())
                     return;
                 
+                DeleteLearning();
                 _lineRenderer = Instantiate(_lineRendererPrefab);
                 playerMove.SetupLineRenderer(_lineRenderer);
+                _lineRenderer.positionCount++;
+                _lineRenderer.SetPosition(0, playerMove.transform.position);
                 _isDrawing = true;
                 _player = playerMove;
             }
-
+        }
+        
         _previousPosition = TouchPosition();
     }
 
@@ -85,15 +87,15 @@ public class Draw : MonoBehaviour
         
         if (Vector3.Distance(currentPosition, _previousPosition) >= _minDistance)
         {
-            if (_previousPosition == transform.position)
+            /*if (_previousPosition == transform.position)
             {
                 _lineRenderer.SetPosition(0, currentPosition);
             }
             else
-            {
+            {*/
                 _lineRenderer.positionCount++;
-                _lineRenderer.SetPosition(_lineRenderer.positionCount - 1, currentPosition);
-            }
+                _lineRenderer.SetPosition(_lineRenderer.positionCount-1, currentPosition);
+            //}
 
             _previousPosition = currentPosition;
         }
@@ -131,6 +133,12 @@ public class Draw : MonoBehaviour
         Vector3 currentPosition = TouchPosition();
         RaycastHit2D raycast = Physics2D.Raycast(currentPosition, Vector2.zero);
         return raycast;
+    }
+
+    private void DeleteLearning()
+    {
+        if(_learningStuff != null && _learningStuff.activeInHierarchy)
+            _learningStuff.SetActive(false);
     }
 
     private Vector2 TouchPosition() => 

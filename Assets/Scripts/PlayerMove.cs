@@ -58,10 +58,11 @@ public class PlayerMove : MonoBehaviour
     private void DeleteLine() => 
         Destroy(_currentLine.gameObject);
 
-    public void Move()
-    {
+    public void Move() => 
         _moveCoroutine = StartCoroutine(MovePlayer(_points));
-    }
+
+    public void StopMove() => 
+        StopCoroutine(_moveCoroutine);
 
     IEnumerator MovePlayer(Vector3[] points)
     {
@@ -101,19 +102,15 @@ public class PlayerMove : MonoBehaviour
             yield return null;
         }
         
+        OnTargetReached?.Invoke();
         Debug.Log("end" + Time.time);
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.TryGetComponent(out EndPoint endPoint))
-        {
-            OnTargetReached?.Invoke();
-        }
-        else
+        if (!col.TryGetComponent(out EndPoint endPoint))
         {
             OnTriggerOtherPlayer?.Invoke();
-            StopCoroutine(_moveCoroutine);
         }
     }
 }

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class SceneLevelChanger
 {
     private const string _levelSceneKey = "Level";
@@ -14,11 +16,15 @@ public class SceneLevelChanger
     public void UpgradeLevel() => 
         _gameData.SetNewLevel();
 
-    public void LoadCurrentLevel()
+    public void LoadCurrentLevel(GameObject loadingScreen = null)
     {
-        LoadLevel();
+        LoadLevel(loadingScreen);
     }
 
-    private void LoadLevel() => 
+    private void LoadLevel(GameObject loadingScreen = null)
+    {
+        if(loadingScreen != null)
+            loadingScreen.SetActive(true);
         _sceneLoader.Load(_levelSceneKey + _gameData.CurrentLevel);
+    }
 }

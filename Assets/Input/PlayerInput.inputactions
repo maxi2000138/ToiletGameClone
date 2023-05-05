@@ -42,7 +42,7 @@
                     "path": "<Touchscreen>/Press",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Touch",
                     "action": "TouchPress",
                     "isComposite": false,
                     "isPartOfComposite": false

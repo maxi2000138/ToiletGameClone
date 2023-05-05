@@ -8,9 +8,17 @@ public class NextLevelButton : MonoBehaviour
     private Button _nextLevelButton;
     private SceneLevelChanger _sceneLevelChanger;
 
+    [SerializeField]
+    private GameObject _loadingScreen;
+
+    private GameData _gameData;
+    private SceneLoader _sceneLoader;
+
     [Inject]
-    public void Construct(SceneLevelChanger sceneLevelChanger)
+    public void Construct(SceneLevelChanger sceneLevelChanger, GameData gameData, SceneLoader sceneLoader)
     {
+        _sceneLoader = sceneLoader;
+        _gameData = gameData;
         _sceneLevelChanger = sceneLevelChanger;
     }
 
@@ -23,6 +31,11 @@ public class NextLevelButton : MonoBehaviour
     private void OnDisable() => 
         _nextLevelButton.onClick.RemoveListener(OnNextLevelButtonClick);
     
-    public void OnNextLevelButtonClick() => 
-        _sceneLevelChanger.LoadCurrentLevel();
+    public void OnNextLevelButtonClick()
+    {
+        if(_gameData.AllLevelsCompleted())
+            _sceneLoader.Load("Menu");
+        else
+            _sceneLevelChanger.LoadCurrentLevel(_loadingScreen);
+    }
 }

@@ -9,6 +9,9 @@ public class StartLevel : MonoBehaviour
     private Button _button;
     private SceneLevelChanger _sceneLevelChanger;
 
+    [SerializeField] 
+    private GameObject _loadingScreen;
+
     [Inject]
     public void Construct(SceneLevelChanger sceneLevelChanger)
     {
@@ -25,6 +28,6 @@ public class StartLevel : MonoBehaviour
         _button.onClick.RemoveListener(LoadNewLvl);
     
     public void LoadNewLvl() =>
-        _sceneLevelChanger.LoadCurrentLevel();
+        _sceneLevelChanger.LoadCurrentLevel(_loadingScreen);
 
 }

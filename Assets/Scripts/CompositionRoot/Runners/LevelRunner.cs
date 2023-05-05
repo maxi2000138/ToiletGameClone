@@ -16,11 +16,19 @@ public class LevelRunner : MonoBehaviour
 
     [SerializeField]
     private GameObject _winPanel;
-    
+
+    [SerializeField] 
+    private SetLevelText _levelText;
+
+    private GameData _gameData;
+    private StaticDataService _staticDataService;
+
 
     [Inject]
-    public void Construct(SceneLevelChanger levelChanger)
+    public void Construct(SceneLevelChanger levelChanger, GameData gameData, StaticDataService staticDataService)
     {
+        _staticDataService = staticDataService;
+        _gameData = gameData;
         _levelChanger = levelChanger;
     }
     
@@ -28,8 +36,21 @@ public class LevelRunner : MonoBehaviour
     {
         ResetDrawedNum();
         ResetReachedPlayerNum();
+        SetLevelText();
         _playerMoves = FindObjectsOfType<PlayerMove>();
         _endPoints = FindObjectsOfType<EndPoint>();
+        SetSkins();
+    }
+
+    public void SetSkins()
+    {
+        foreach (PlayerMove playerMove in _playerMoves)
+        {
+            playerPresenter playerPresenter = playerMove.gameObject.GetComponent<playerPresenter>();
+            SkinData skinData = _staticDataService.ForSkin(playerPresenter.TypeID
+                , _gameData.SkinNum(playerPresenter.TypeID));
+            playerPresenter.Construct(skinData.Image);
+        }
     }
 
     public void ResetDrawedNum() => 
@@ -64,7 +85,7 @@ public class LevelRunner : MonoBehaviour
     private void OnTargetReached()
     {
         _reachedPlayerNum++;
-        if (_reachedPlayerNum != _endPoints.Length)
+        if (_reachedPlayerNum == _endPoints.Length)
         {
             OnGameWin();
         }
@@ -92,6 +113,8 @@ public class LevelRunner : MonoBehaviour
     private void OnGameLoose()
     {
         _loosePanel.SetActive(true);
+        foreach (PlayerMove playerMove in _playerMoves) 
+            playerMove.StopMove();
     }
 
     public void OnGameReplay()
@@ -113,4 +136,7 @@ public class LevelRunner : MonoBehaviour
             isCompleted = true;
         }
     }
+
+    private void SetLevelText() => 
+        _levelText.SetText("Level " + _gameData.CurrentLevel);
 }
